@@ -5,10 +5,9 @@
 
 from scipy.io.wavfile import read as read_wav
 
-sample_rate, data = read_wav("/Users/amandavielmann/Downloads/human_voice.wav")
+sample_rate, data = read_wav("human_voice.wav")
 
 print(f"The original sampling frequency is: {sample_rate} Hz")
-
 
 
 # (3) Plot the signal using matplotlib#
@@ -17,7 +16,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io.wavfile import read as read_wav
 
-sample_rate, data = read_wav("/Users/amandavielmann/Downloads/human_voice.wav")
+sample_rate, data = read_wav("human_voice.wav")
 
 
 if len(data.shape) > 1:
@@ -37,7 +36,7 @@ plt.show()
 
 from scipy.io.wavfile import read as read_wav
 
-sample_rate, data = read_wav("/Users/amandavielmann/Downloads/human_voice.wav")
+sample_rate, data = read_wav("human_voice.wav")
 
 new_fs = 8000
 factor = sample_rate // new_fs
