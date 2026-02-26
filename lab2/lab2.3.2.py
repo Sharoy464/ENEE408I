@@ -36,9 +36,3 @@ for i in range(N + M - 1):
     cross[i] = np.sum(segment * m2)
 
 print("Cross-correlation:", cross)
-
-# (4) Given below is a rough sketch of a robot with two microphones M1 and M2. S is the sound
-# source emitting the signal. d1 is the distance between the sound source and M1, and d2 is the
-# distance between the sound source and M2. Calculate the angle θ which the robot must turn to
-# correct its heading toward the sound source. Let r, the radius of the robot, be 10cm.
-
