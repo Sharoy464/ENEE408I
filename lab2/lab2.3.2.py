@@ -1,83 +1,44 @@
 ##Lab 2##
 
-#3.1 Part A
-# (2) Read the wav file “human_voice.wav” and write down its original sampling frequency.#
-
 from scipy.io.wavfile import read as read_wav
-
-sample_rate, data = read_wav("human_voice.wav")
-
-print(f"The original sampling frequency is: {sample_rate} Hz")
-
-
-
-# (3) Plot the signal using matplotlib#
-
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.io.wavfile import read as read_wav
 
-sample_rate, data = read_wav("human_voice.wav")
+#3.2 Part B
+# (1) Calculate the rms values for each of the audio signals M1.wav, M2.wav and M3.wav using
+# Python. (Here M1.wav is the audio signal received by the microphone M1)
 
+m1_sampling_rate, m1 = read_wav("M1.wav")
+m2_sampling_rate, m2 = read_wav("M2.wav")
+m3_sampling_rate, m3 = read_wav("M3.wav")
 
-if len(data.shape) > 1:
-    data = data[:,0]
+m1 = m1.astype(np.float64)
+m2 = m2.astype(np.float64)
+m3 = m3.astype(np.float64)
 
-t = np.arange(len(data)) / sample_rate
+m = np.vstack([m1, m2, m3])
+squared = np.square(m)
+means = np.mean(squared, axis=1)
+rms = np.sqrt(means)
+print("RMS:", rms)
 
-plt.figure(figsize=(10,4))
-plt.plot(t, data)
-plt.xlabel("Time (seconds)")
-plt.ylabel("Amplitude")
-plt.title("Original Signal")
-plt.show()
+# (3) Using crosscorrelation, calculate the time delay between the audio signals received
+# between M1 and M2 using Python. Try to compute this without the use of inbuilt functions.
 
+N = len(m1)
+M = len(m2)
 
-# (4) Downsample the audio file to 8kHz without using inbuilt functions#
+m1_padded = np.pad(m1, M-1)
+cross = np.zeros(N + M - 1)
 
-from scipy.io.wavfile import read as read_wav
+for i in range(N + M - 1):
+    segment = m1_padded[i:i+M]
+    cross[i] = np.sum(segment * m2)
 
-sample_rate, data = read_wav("human_voice.wav")
+print("Cross-correlation:", cross)
 
-new_fs = 8000
-factor = sample_rate // new_fs
+# (4) Given below is a rough sketch of a robot with two microphones M1 and M2. S is the sound
+# source emitting the signal. d1 is the distance between the sound source and M1, and d2 is the
+# distance between the sound source and M2. Calculate the angle θ which the robot must turn to
+# correct its heading toward the sound source. Let r, the radius of the robot, be 10cm.
 
-print("Original sampling rate:", sample_rate, "Hz")
-print("New sampling rate:", new_fs, "Hz")
-print("Downsampling factor:", factor)
-
-# (6) Plot the downsampled signal using matplotlib.
-
-downsampled = data[::factor]
-
-if len(downsampled.shape) > 1:
-    downsampled = downsampled[:,0]
-
-t_new = np.arange(len(downsampled)) / new_fs
-
-plt.figure(figsize=(10,4))
-plt.plot(t_new, downsampled)
-plt.xlabel("Time (seconds)")
-plt.ylabel("Amplitude")
-plt.title("Downsampled Signal (8 kHz)")
-plt.show()
-
-
-# (7) Observe a section of the audio signal corresponding to the same time 
-# period (hint: think of the sampling ratio and select two starting and 
-# ending points). What differences do you notice? #
-
-start_time = 0.5
-end_time = 0.51
-
-start_orig = int(start_time * sample_rate)
-end_orig = int(end_time * sample_rate)
-
-start_down = int(start_time * new_fs)
-end_down = int(end_time * new_fs)
-
-plt.figure(figsize=(10,4))
-plt.plot(t[start_orig:end_orig], data[start_orig:end_orig], label="Original")
-plt.plot(t_new[start_down:end_down], downsampled[start_down:end_down], label="Downsampled")
-plt.legend()
-plt.show()
