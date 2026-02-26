@@ -63,20 +63,20 @@ def lowpass(data: np.ndarray, cutoff: float, sample_rate: float, poles: int = 5)
     filtered_data = scipy.signal.sosfiltfilt(sos, data)
     return filtered_data
 
-# Load your audio file
+
 sample_rate, data = scipy.io.wavfile.read("/Users/amandavielmann/Downloads/Cafe_with_noise.wav")
 
-# If stereo, use one channel
+
 if data.ndim > 1:
     data = data[:,0]
 
-# Convert to float for filtering
+
 data = data.astype(np.float32) / 32767.0
 
 
 filtered = lowpass(data, cutoff=3500, sample_rate=sample_rate, poles=6)
 
-# Plot small section
+
 times = np.arange(len(data)) / sample_rate
 
 plt.figure(figsize=(10,4))
