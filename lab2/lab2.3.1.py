@@ -9,7 +9,6 @@ sample_rate, data = read_wav("human_voice.wav")
 
 print(f"The original sampling frequency is: {sample_rate} Hz")
 
-
 # (3) Plot the signal using matplotlib#
 
 import numpy as np
@@ -30,7 +29,6 @@ plt.xlabel("Time (seconds)")
 plt.ylabel("Amplitude")
 plt.title("Original Signal")
 plt.show()
-
 
 # (4) Downsample the audio file to 8kHz without using inbuilt functions#
 

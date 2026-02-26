@@ -28,6 +28,8 @@ print("RMS:", rms)
 N = len(m1)
 M = len(m2)
 
+time_per_sample = 1/m1_sampling_rate
+
 m1_padded = np.pad(m1, M-1)
 cross = np.zeros(N + M - 1)
 
@@ -35,4 +37,4 @@ for i in range(N + M - 1):
     segment = m1_padded[i:i+M]
     cross[i] = np.sum(segment * m2)
 
-print("Cross-correlation:", cross)
+print("Time delay: ", np.argmax(cross) * time_per_sample, "sec")
