@@ -37,4 +37,61 @@ for i in range(N + M - 1):
     segment = m1_padded[i:i+M]
     cross[i] = np.sum(segment * m2)
 
+
 print("Time delay: ", np.argmax(cross) * time_per_sample, "sec")
+
+
+
+# (4) Angle theta using law of cosines + law of sines (prof derivation)
+
+c = 343.0      # speed of sound (m/s)
+r = 0.10       # robot radius = 10 cm = 0.10 m
+
+# --- use YOUR time delay exactly as you computed/printed it above ---
+dt = np.argmax(cross) * time_per_sample   # seconds
+
+# distance difference from time delay: d2 - d1
+delta_d = c * dt
+
+# --- estimate d1 and d2 from RMS (simple model: amplitude ~ 1/d so d ~ 1/RMS) ---
+rms1 = float(rms[0])   # M1 rms
+rms2 = float(rms[1])   # M2 rms
+
+# Solve for d1, d2 using:
+# d2 - d1 = delta_d
+# d1/d2 = rms2/rms1   (since d ~ 1/RMS)
+ratio = rms2 / rms1
+if abs(1.0 - ratio) < 1e-12:
+    raise ValueError("RMS ratio too close to 1; cannot estimate d1 and d2 reliably.")
+
+d2 = delta_d / (1.0 - ratio)
+d1 = ratio * d2
+
+# Make distances positive if needed (just in case sign conventions produce negative)
+if d1 < 0 and d2 < 0:
+    d1 *= -1
+    d2 *= -1
+
+# --- professor-provided equations ---
+# phi1 = arccos( (-d2^2 + d1^2 + 4r^2) / (4 d1 r) )
+cos_phi1 = (-d2**2 + d1**2 + 4*(r**2)) / (4*d1*r)
+cos_phi1 = np.clip(cos_phi1, -1.0, 1.0)
+phi1 = np.arccos(cos_phi1)
+
+# d3 = sqrt(d1^2 + r^2 - 2 d1 r cos(phi1))
+d3 = np.sqrt(d1**2 + r**2 - 2*d1*r*np.cos(phi1))
+
+# theta = -pi/2 + arcsin( (d1 sin(phi1)) / d3 )
+arg = (d1 * np.sin(phi1)) / d3
+arg = np.clip(arg, -1.0, 1.0)
+theta = -np.pi/2 + np.arcsin(arg)
+
+print("dt =", dt, "sec")
+print("delta_d = d2 - d1 =", delta_d, "m")
+print("Estimated d1 =", d1, "m")
+print("Estimated d2 =", d2, "m")
+print("phi1 (rad) =", phi1)
+print("d3 (m) =", d3)
+print("theta (rad) =", theta)
+print("theta (deg) =", np.degrees(theta))
+
