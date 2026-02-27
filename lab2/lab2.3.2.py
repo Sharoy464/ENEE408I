@@ -47,13 +47,13 @@ print("Time delay: ", np.argmax(cross) * time_per_sample, "sec")
 c = 343.0      # speed of sound (m/s)
 r = 0.10       # robot radius = 10 cm = 0.10 m
 
-# --- use YOUR time delay exactly as you computed/printed it above ---
+# using our time delay we calculated
 dt = np.argmax(cross) * time_per_sample   # seconds
 
 # distance difference from time delay: d2 - d1
 delta_d = c * dt
 
-# --- estimate d1 and d2 from RMS (simple model: amplitude ~ 1/d so d ~ 1/RMS) ---
+# estimate d1 and d2 from RMS (simple model: amplitude ~ 1/d so d ~ 1/RMS)
 rms1 = float(rms[0])   # M1 rms
 rms2 = float(rms[1])   # M2 rms
 
@@ -72,7 +72,7 @@ if d1 < 0 and d2 < 0:
     d1 *= -1
     d2 *= -1
 
-# --- professor-provided equations ---
+# 
 # phi1 = arccos( (-d2^2 + d1^2 + 4r^2) / (4 d1 r) )
 cos_phi1 = (-d2**2 + d1**2 + 4*(r**2)) / (4*d1*r)
 cos_phi1 = np.clip(cos_phi1, -1.0, 1.0)
@@ -94,4 +94,5 @@ print("phi1 (rad) =", phi1)
 print("d3 (m) =", d3)
 print("theta (rad) =", theta)
 print("theta (deg) =", np.degrees(theta))
+
 
