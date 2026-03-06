@@ -25,7 +25,6 @@ def detectLine(frame):
 
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    # Default: no line found
     lineCenter = 0.0
 
     if contours:
@@ -50,7 +49,7 @@ def detectLine(frame):
 def main():
     cam = cv2.VideoCapture(0)
     if not cam.isOpened():
-        print("Camera did not open. Check macOS Camera permissions for Terminal/VS Code.")
+        print("Camera did not open.")
         return
 
     while True:
